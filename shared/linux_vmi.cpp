@@ -983,6 +983,13 @@ int find_linux(CPUState *env, uintptr_t insn_handle) {
 	target_ulong _thread_info = DECAF_getESP(env) & ~ (guestOS_THREAD_SIZE - 1);
 	static target_ulong _last_thread_info = 0;
 
+	static target_ulong _func_log_info = 0;
+	if (_func_log_info == 0)
+	{
+	load_library_info("func_log");
+	_func_log_info = 1;
+	}
+
 	// if current address is tested before, save time and do not try it again
 	if (_thread_info == _last_thread_info || _thread_info <= 0x80000000)
 		return 0;

@@ -92,6 +92,28 @@ int funcmap_get_name(target_ulong pc, target_ulong cr3, string &mod_name, string
 	return 0;
 }
 
+int funcmap_get_name_by_pc(target_ulong pc, char *mod_name, string &func_name)
+{
+	target_ulong base = 0;
+	/*
+	module *mod = VMI_find_module_by_pc(pc, cr3, &base);
+	if(!mod)
+		return -1;
+		*/
+
+	map<string, map<uint32_t, string> >::iterator iter = map_offset_function.find(mod_name);
+	if (iter == map_offset_function.end())
+		return -1;
+
+	map<uint32_t, string>::iterator iter2 = iter->second.find(pc - base);
+	if (iter2 == iter->second.end())
+		return -1;
+
+	//mod_name = mod->name;
+	func_name = iter2->second;
+	return 0;
+}
+
 int funcmap_get_name_c(target_ulong pc, target_ulong cr3, char *mod_name, char *func_name)
 {
 	string mod, func;
@@ -99,6 +121,19 @@ int funcmap_get_name_c(target_ulong pc, target_ulong cr3, char *mod_name, char *
 	if(ret == 0) {
 		//we assume the caller has allocated enough space for mod_name and func_name
 		strncpy(mod_name, mod.c_str(), 512);
+		strncpy(func_name, func.c_str(), 512);
+	}
+
+	return ret;
+}
+
+int funcmap_get_name_by_pc_c(target_ulong pc, char *mod_name, char *func_name)
+{
+	string mod, func;
+	int ret = funcmap_get_name_by_pc(pc, mod_name, func);
+	if(ret == 0) {
+		//we assume the caller has allocated enough space for mod_name and func_name
+//		strncpy(mod_name, mod.c_str(), 512);
 		strncpy(func_name, func.c_str(), 512);
 	}
 
