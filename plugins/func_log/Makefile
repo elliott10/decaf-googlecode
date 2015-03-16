@@ -41,7 +41,7 @@ func_log-static.so: $(OBJS)
 	$(CPP) -static-libgcc -Wl,-static $(LDFLAGS) $^ -o $@ $(LIBS)
 
 qemu:
-	$(SRC_PATH)/i386-softmmu/qemu-system-i386 -hda $(LAB_PATH)/bin/ucore.img -load-plugin $(PLUGIN_PATH)/func_log.so -serial null -monitor stdio
+	$(SRC_PATH)/i386-softmmu/qemu-system-i386 -bios ./bios.bin -hda $(LAB_PATH)/bin/ucore.img -load-plugin $(PLUGIN_PATH)/func_log.so -serial null -monitor stdio -no-reboot -d int
 
 clean:
 	rm -f *.o *.d *.so *.a *~ $(PLUGIN) 

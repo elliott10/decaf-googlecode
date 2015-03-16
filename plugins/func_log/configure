@@ -78,7 +78,9 @@ echo '' >> $func_log
 echo '[1]' >> $func_log
 echo '; ucore_lab' >> $func_log
 echo 'decaf_conf_libpath = ucore_lab' >> $func_log
-objdump -t $lab_path/obj/bootblock.o $lab_path/bin/kernel | awk '/\.text/ && $NF !~/\./ {printf("%-30s= %d\n",$NF,strtonum("0x"$1))}'|awk '!a[$1]++' >> $func_log
+#bios bootblock ucore_kernel
+#objdump -t bios.rom $lab_path/obj/bootblock.o $lab_path/bin/kernel | awk '(/ABS/ || /\.text/) && $NF !~/\./ {printf("%-30s= %d\n",$NF,strtonum("0x"$1))}'|awk '!a[$1]++' >> $func_log
+objdump -t $lab_path/bin/kernel $lab_path/obj/bootblock.o bios.rom | awk '(/ABS/ || /\.text/) && $NF !~/\./ {printf("%-30s= %d\n",$NF,strtonum("0x"$1))}'|awk '!a[$1]++' >> $func_log
 
 if [[ ! -e "$decaf_path/config-host.mak" ]]; then
  echo

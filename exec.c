@@ -1641,7 +1641,9 @@ void cpu_set_log(int log_flags)
 {
     loglevel = log_flags;
     if (loglevel && !logfile) {
-        logfile = fopen(logfilename, log_append ? "a" : "w");
+//        logfile = fopen(logfilename, log_append ? "a" : "w");
+	//xly for func_log
+	logfile = stdout;
         if (!logfile) {
             perror(logfilename);
             _exit(1);

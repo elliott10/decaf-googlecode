@@ -113,6 +113,7 @@ void check_call(DECAF_Callback_Params *param)
 	}
 
 }
+
 void check_ret(DECAF_Callback_Params *param)
 {
 	if(!stack_top)
