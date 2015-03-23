@@ -46,3 +46,9 @@ trace.c
 trace.c-timestamp
 trace.h
 trace.h-timestamp
+plugins/func_log/*.log
+plugins/func_log/config-plugin.h 
+plugins/func_log/config-plugin.mak  
+plugins/func_log/func_log.so   
+plugins/func_log/libfunc_log.a
+shared/kernelinfo/procinfo_generic/lib_conf/func_log.ini

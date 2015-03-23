@@ -18,7 +18,8 @@ make
 3.编译插件func_log, func_log插件默认路径是plugins/func_log
 ```
 cd decaf_googlecode/plugins/func_log
-./configure --decaf-path=[decaf_googlecode root path]  --lab-path=[ucore lab root path]
+#./configure --decaf-path=[decaf_googlecode root path]  --lab-path=[ucore lab root path]
+./configure --decaf-path=/home/chyyuu/develop/logfun/decaf-googlecode --lab-path=/home/chyyuu/develop/ucore_lab/labcodes/lab1                                     
 // build plugin: func_log
 make
 // analysis ucore lab
