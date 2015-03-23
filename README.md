@@ -1,3 +1,30 @@
+# 用于ucore_lab的qemu(with DECAF)
+## 编译运行
+
+1. 编译decaf
+```
+cd decaf_googlecode
+./configure --target-list=i386-softmmu --enable-vmi --enable-tcg-taint
+make
+```
+
+2.编译ucore lab
+```
+git clone https://github.com/chyyuu/ucore_lab
+cd ucore_lab/labcodes/lab1
+make   
+```
+
+3.编译插件func_log, func_log插件默认路径是plugins/func_log
+```
+cd decaf_googlecode/plugins/func_log
+./configure --decaf-path=[decaf_googlecode root path]  --lab-path=[ucore lab root path]
+// build plugin: func_log
+make
+// analysis ucore lab
+make qemu
+```
+
 <Syracuse System Security (Sycure) Lab>
 
 Welcome to DECAF, release 1.0.
