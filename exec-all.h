@@ -358,6 +358,8 @@ extern spinlock_t tb_lock;
 
 extern int tb_invalidated_flag;
 
+extern int crash_capture_flag;
+
 /* The return address may point to the start of the next instruction.
    Subtracting one gets us the call instruction itself.  */
 #if defined(CONFIG_TCG_INTERPRETER)

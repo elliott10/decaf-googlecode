@@ -280,6 +280,8 @@ static int default_floppy = 1;
 static int default_cdrom = 1;
 static int default_sdcard = 1;
 
+extern void *gdbserver_state;
+
 static struct {
     const char *driver;
     int *flag;
@@ -1484,7 +1486,11 @@ static void main_loop(void)
 #endif
         last_io = main_loop_wait(nonblocking);
 #ifdef CONFIG_TCG_TAINT
+
+	if(gdbserver_state == NULL)
+	{
         garbage_collect_taint(0);
+	}
 #endif /* CONFIG_TCG_TAINT */
 #ifdef CONFIG_PROFILER
         dev_time += profile_getclock() - ti;

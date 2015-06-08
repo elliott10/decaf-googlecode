@@ -311,7 +311,8 @@ typedef struct GDBState {
  */
 static int sstep_flags = SSTEP_ENABLE|SSTEP_NOIRQ|SSTEP_NOTIMER;
 
-static GDBState *gdbserver_state;
+/*static */ GDBState *gdbserver_state = NULL;
+int crash_capture_gdb_flag = 1;
 
 /* This is an ugly hack to cope with both new and old gdb.
    If gdb sends qXfer:features:read then assume we're talking to a newish
@@ -2291,6 +2292,26 @@ static int gdb_handle_packet(GDBState *s, const char *line_buf)
             }
             break;
         }
+
+        else if (strncmp(p,"qemu.crash_capture_on",21) == 0) {
+
+		crash_capture_gdb_flag = 1;
+            put_packet(s, "CRASH CAPTURE: ON");
+            break;
+        } else if (strncmp(p,"qemu.crash_capture_off",22) == 0) {
+
+		crash_capture_gdb_flag = 0;
+            put_packet(s, "CRASH CAPTURE: OFF");
+		break;
+        } else if (strncmp(p,"qemu.crash_capture",22) == 0) {
+
+	}
+
+
+
+
+
+
 #ifdef CONFIG_USER_ONLY
         else if (strncmp(p, "Offsets", 7) == 0) {
             TaskState *ts = s->c_cpu->opaque;

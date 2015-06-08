@@ -25,6 +25,11 @@
 
 int tb_invalidated_flag;
 
+int crash_capture_flag = 0;
+
+extern void *gdbserver_state;
+extern int crash_capture_gdb_flag;
+
 //#define CONFIG_DEBUG_EXEC
 
 bool qemu_cpu_has_work(CPUState *env)
@@ -263,6 +268,15 @@ int cpu_exec(CPUState *env)
 #endif
                 }
             }
+
+		    if(crash_capture_gdb_flag && crash_capture_flag == 1 && gdbserver_state != NULL)
+		    {
+			crash_capture_flag = 0;
+			printf("CRASH_CAPTURE.env->exception_index:0x%x\n",env->exception_index);
+			ret = EXCP_DEBUG;
+                        cpu_handle_debug_exception(env);
+                    	break;
+                    }
 
             next_tb = 0; /* force lookup of first TB */
             for(;;) {
