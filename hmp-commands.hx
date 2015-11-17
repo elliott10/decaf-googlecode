@@ -181,6 +181,20 @@ Output logs to @var{filename}.
 ETEXI
 
     {
+        .name       = "qemu-test-cmd",
+        .args_type  = "name:s",
+        .params     = "name",
+        .help       = "QEMU test command",
+        .mhandler.cmd = do_qemu_test,
+    },
+
+STEXI
+@item qemu-test-cmd 
+@findex qemu-test-cmd
+Qemu test something
+ETEXI
+
+    {
         .name       = "trace-event",
         .args_type  = "name:s,option:b",
         .params     = "name on|off",

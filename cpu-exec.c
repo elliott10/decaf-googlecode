@@ -26,6 +26,12 @@
 int tb_invalidated_flag;
 
 int crash_capture_flag = 0;
+int exec_count_flag = 0;
+unsigned long exec_count = 0;
+
+struct timeval asm_tick;
+struct timeval asm_tock;
+double asm_elapsedtime;
 
 extern void *gdbserver_state;
 extern int crash_capture_gdb_flag;
@@ -559,6 +565,29 @@ int cpu_exec(CPUState *env)
                     next_tb = 0;
                     tb_invalidated_flag = 0;
                 }
+
+		//for qemu asm test
+		if(exec_count_flag ==1){
+			if (exec_count == 0){
+				gettimeofday(&asm_tick, NULL);
+			}
+
+			exec_count += tb->size;// tb size count
+
+			if(exec_count >= 10000000){ // 1 qw
+				gettimeofday(&asm_tock, NULL);
+
+				exec_count_flag = 0;
+
+				asm_elapsedtime = (double)asm_tock.tv_sec + ((double)asm_tock.tv_usec / 1000000.0);
+				asm_elapsedtime -= ((double)asm_tick.tv_sec + ((double)asm_tick.tv_usec / 1000000.0));
+				//printf("  Elapsed time = %0.6f seconds\n", elapsedtime);
+				printf("the count end.\n");
+				printf("The speed of the QEMU instruction simulation is %0.3f asm/seconds\n", exec_count / asm_elapsedtime);
+			}
+
+		}
+
 #ifdef CONFIG_DEBUG_EXEC
                 qemu_log_mask(CPU_LOG_EXEC, "Trace 0x%08lx [" TARGET_FMT_lx "] %s\n",
                              (long)tb->tc_ptr, tb->pc,

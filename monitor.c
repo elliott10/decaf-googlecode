@@ -620,6 +620,21 @@ static void do_help_cmd(Monitor *mon, const QDict *qdict)
     help_cmd(mon, qdict_get_try_str(qdict, "name"));
 }
 
+static void do_qemu_test(Monitor *mon, const QDict *qdict)
+{
+	const char *tp_name = qdict_get_str(qdict, "name");
+
+	if (strcmp(tp_name,"count_asm") == 0) {
+		monitor_printf(mon, "the count start ......\n");
+
+		exec_count = 0;
+		exec_count_flag = 1;
+
+	}else if (strcmp(tp_name,"count_show") == 0) {
+		monitor_printf(mon, "the count = %d \n", exec_count);
+	}
+}
+
 static void do_trace_event_set_state(Monitor *mon, const QDict *qdict)
 {
     const char *tp_name = qdict_get_str(qdict, "name");

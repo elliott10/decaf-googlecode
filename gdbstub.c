@@ -314,6 +314,11 @@ static int sstep_flags = SSTEP_ENABLE|SSTEP_NOIRQ|SSTEP_NOTIMER;
 /*static */ GDBState *gdbserver_state = NULL;
 int crash_capture_gdb_flag = 1;
 
+int tick_tock_gdb_flag = 0;
+struct timeval tick;
+struct timeval tock;
+double elapsedtime;
+
 /* This is an ugly hack to cope with both new and old gdb.
    If gdb sends qXfer:features:read then assume we're talking to a newish
    gdb that understands target descriptions.  */
@@ -2303,14 +2308,13 @@ static int gdb_handle_packet(GDBState *s, const char *line_buf)
 		crash_capture_gdb_flag = 0;
             put_packet(s, "CRASH CAPTURE: OFF");
 		break;
-        } else if (strncmp(p,"qemu.crash_capture",22) == 0) {
+        } else if (strncmp(p,"qemu.tick_tock", 14) == 0) {
+		tick_tock_gdb_flag = 1;
 
+  		gettimeofday(&tick, NULL);
+            	put_packet(s, "Tick Tock!");
+	    	break;
 	}
-
-
-
-
-
 
 #ifdef CONFIG_USER_ONLY
         else if (strncmp(p, "Offsets", 7) == 0) {
@@ -2559,6 +2563,16 @@ static void gdb_read_byte(GDBState *s, int ch)
 #endif
             put_buffer(s, (uint8_t *)s->last_packet, s->last_packet_len);
         }
+
+        else if (tick_tock_gdb_flag == 1 && ch == '+'){
+    		gettimeofday(&tock, NULL);
+
+		tick_tock_gdb_flag = 0;
+    		elapsedtime = (double)tock.tv_sec + ((double)tock.tv_usec / 1000000.0);
+    		elapsedtime -= ((double)tick.tv_sec + ((double)tick.tv_usec / 1000000.0));
+   		printf("Tick tock elapsed time = %0.9f seconds\n", elapsedtime/2);
+	}
+
 #ifdef DEBUG_GDB
         else if (ch == '+')
             printf("Got ACK\n");

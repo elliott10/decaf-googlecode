@@ -1443,8 +1443,11 @@ static int check_exception(int intno, int *error_code)
 
     {
 	    crash_capture_flag = 1;
+
+	    /*
     printf("CRASH_CAPTURE.check_exception old: 0x%x new 0x%x\n",
                 env->old_exception, intno);
+    */
     }
 
 #if !defined(CONFIG_USER_ONLY)

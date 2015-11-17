@@ -359,6 +359,12 @@ extern spinlock_t tb_lock;
 extern int tb_invalidated_flag;
 
 extern int crash_capture_flag;
+extern int exec_count_flag;
+extern unsigned long exec_count;
+
+extern struct timeval asm_tick;
+extern struct timeval asm_tock;
+extern double asm_elapsedtime;
 
 /* The return address may point to the start of the next instruction.
    Subtracting one gets us the call instruction itself.  */

@@ -146,6 +146,7 @@ void target_disas(FILE *out, target_ulong code, target_ulong size, int flags)
 {
     target_ulong pc;
     int count;
+    unsigned long count_in_asm; //for qemu test
     struct disassemble_info disasm_info;
     int (*print_insn)(bfd_vma pc, disassemble_info *info);
 
@@ -226,6 +227,7 @@ void target_disas(FILE *out, target_ulong code, target_ulong size, int flags)
     return;
 #endif
 
+    count_in_asm = 0;
     for (pc = code; size > 0; pc += count, size -= count) {
 	fprintf(out, "0x" TARGET_FMT_lx ":  ", pc);
 	count = print_insn(pc, &disasm_info);
@@ -242,6 +244,8 @@ void target_disas(FILE *out, target_ulong code, target_ulong size, int flags)
         }
 #endif
 	fprintf(out, "\n");
+	count_in_asm ++;
+
 	if (count < 0)
 	    break;
         if (size < count) {
@@ -252,6 +256,29 @@ void target_disas(FILE *out, target_ulong code, target_ulong size, int flags)
             break;
         }
     }
+
+#if 0
+    if(exec_count_flag ==1){
+	    if (exec_count == 0){
+		     gettimeofday(&asm_tick, NULL);
+		     exec_count ++;
+	    }
+	    exec_count += count_in_asm; //for qemu test
+
+	    if(exec_count >= 100000000){
+		    gettimeofday(&asm_tock, NULL);
+
+		    exec_count_flag = 0;
+
+		    asm_elapsedtime = (double)asm_tock.tv_sec + ((double)asm_tock.tv_usec / 1000000.0);
+		    asm_elapsedtime -= ((double)asm_tick.tv_sec + ((double)asm_tick.tv_usec / 1000000.0));
+		    //printf("  Elapsed time = %0.6f seconds\n", elapsedtime);
+		    printf("the count end\n");
+		    printf("The speed of the QEMU instruction simulation is %0.6f asm/seconds\n", exec_count / asm_elapsedtime);
+	    }
+
+    }
+#endif
 }
 
 /* Disassemble this for me please... (debugging). */
